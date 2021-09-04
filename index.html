@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+  <title>Todo APP!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container py-5">
+    <div class="card mb-5">
+      <div class="card-header">
+        Todo App
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="New Task..." id="input-task">
+        </div>
+
+        <button type="button" class="btn btn-primary" id="submit-btn">Submit</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Task List</div>
+      <div class="card-body">
+        <ul class="list-group" id="parent-ul">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Hello</span>
+            <button class="btn btn-sm btn-danger delete-task">Delete</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+    //nih yg dicari
+    const todos = [
+    ];
+    // diatas noh
+    
+    function getElement(selector) {
+      return document.querySelector(selector);
+    }
+
+    function renderList() {
+      const parentUL = getElement("#parent-ul");
+
+      parentUL.innerHTML = "";
+
+      let taskElement = "";
+
+      for (let todo of todos) {
+        taskElement += `
+        <li class="list-group-item d-flex justify-content-between">
+          <span>${todo.name}</span>
+          <span>
+            <button class="btn btn-sm btn-warning edit-task" data-id-task="${todo.id}">Edit</button>
+            <button class="btn btn-sm btn-danger delete-task" data-id-task="${todo.id}">Delete</button>
+          </span>
+        </li>\n`;
+      }
+
+      if (taskElement === "") {
+        taskElement = "<h4 class='text-center'>No Task</h4>";
+      }
+
+      parentUL.innerHTML = taskElement;
+
+      mountAction();
+    }
+
+    const submitBTN = getElement('#submit-btn');
+    const inputELEMENT = getElement("#input-task");
+
+    renderList();
+
+    submitBTN.addEventListener("click", function () {
+      const name = inputELEMENT.value;
+      const id = new Date().getTime();
+
+      if (name === "") {
+        return;
+      }
+
+      todos.push({
+        id,
+        name,
+      });
+
+      renderList();
+
+      inputELEMENT.value = "";
+    });
+
+    function mountAction() {
+        const deleteBTNS = document.querySelectorAll('.delete-task');
+
+      for (let btnDELETE of deleteBTNS) {
+        btnDELETE.addEventListener("click", function (element) {
+          const id = element.target.getAttribute('data-id-task');
+          const index = todos.findIndex(todo => todo.id == id);
+
+          todos.splice(index, 1);
+
+          renderList();
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
